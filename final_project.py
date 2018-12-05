@@ -45,21 +45,18 @@ def addtoTable(spotifyList, conn, cur):
             trackName = track['track_name']
             trackNum = track['track_num']
             trackLength = track['track_lengthMS']
-            cur.execute('INSERT INTO Albums (album, artist_name, track, track_number, length_of_track) VALUES (?, ?, ?, ?, ?)', (albumName, artist, trackName, trackNum, trackLength))
+            cur.execute('SELECT track FROM Albums WHERE track=?', (trackName,))
+            exists = cur.fetchall()
+            if not exists:
+                print("data not in database--inserting")
+                cur.execute('INSERT INTO Albums (album, artist_name, track, track_number, length_of_track) VALUES (?, ?, ?, ?, ?)', (albumName, artist, trackName, trackNum, trackLength))
     conn.commit()
     pass
 
 
 
 albumIDLst = ['3CKVXhODttZebJAzjUs2un','6zk4RKl6JFlgLCV4Z7DQ7N','61ulfFSmmxMhc2wCdmdMkN','5M8U1qYKvRQHJJVHmPY7QD','0ny6mZMBrYSO0s8HAKbcVq','3cr4Xgz8nnfp7iYbVqwzzH','6uIB97CqMcssTss9WrtX8c','7DuJYWu66RPdcekF5TuZ7w']
-# spotifyList = []
-# for id in albumIDLst:
-#     results = get_album(id)
-#     spotifyList.append(results)
-# print(spotifyList)
-
 results = get_SpotifyLst(albumIDLst)
-# print(results)
 
 conn = sqlite3.connect('/Users/tiannyylu/Desktop/206_programs/final-project-tiannyylu/albums.sqlite')
 cur = conn.cursor()
