@@ -45,11 +45,7 @@ def addtoTable(spotifyList, conn, cur):
             trackName = track['track_name']
             trackNum = track['track_num']
             trackLength = track['track_lengthMS']
-            cur.execute('SELECT track FROM Albums WHERE track=?', (trackName,))
-            exists = cur.fetchall()
-            if not exists:
-                print("data not in database--inserting")
-                cur.execute('INSERT INTO Albums (album, artist_name, track, track_number, length_of_track) VALUES (?, ?, ?, ?, ?)', (albumName, artist, trackName, trackNum, trackLength))
+            cur.execute('INSERT INTO Albums (album, artist_name, track, track_number, length_of_track) VALUES (?, ?, ?, ?, ?)', (albumName, artist, trackName, trackNum, trackLength))
     conn.commit()
     pass
 
