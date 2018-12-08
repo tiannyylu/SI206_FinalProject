@@ -3,6 +3,8 @@ import requests
 import csv
 import json
 import sqlite3
+import matplotlib.pyplot as plt
+from textwrap import wrap
 import spotify_info
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -65,8 +67,28 @@ def getTrackLengths(cur):
         writer.writeheader()
         for item in avgDict.items():
             writer.writerow({'album names': item[0], 'average track length': item[1]})
-    return myFile 
+    return avgDict
 
+def drawBarChart(avgDict):
+    names = list(avgDict.keys())
+    print(names)
+    nums = list(avgDict.values())
+    fig = plt.figure(figsize=(13,16))
+    ax = fig.add_subplot(111)
+    bars = ax.bar(names, nums)
+    bars[0].set_color('lightsteelblue')
+    bars[1].set_color('lightskyblue')
+    bars[2].set_color('steelblue')
+    bars[3].set_color('lightseagreen')
+    bars[4].set_color('cadetblue')
+    bars[5].set_color('lightslategray')
+    bars[6].set_color('cornflowerblue')
+    bars[7].set_color('midnightblue')
+    ax.set_ylim(0,4.4)
+    names = ['\n'.join(wrap(n, 20)) for n in names]
+    ax.set_xticklabels(names,rotation=45,ha="right",rotation_mode='anchor')
+    ax.set(xlabel='Album Names', ylabel='Average Song Length', title='Average Song Length of Popular Christmas Albums')
+    fig.savefig('SongLengths.png')
 
 
 conn = sqlite3.connect('/Users/tiannyylu/Desktop/206_programs/final-project-tiannyylu/albums.sqlite')
@@ -78,7 +100,7 @@ for id in albumIDLst:
     results = get_album(id)
     spotifyList.append(results)
 
-print(getTrackLengths(cur))
-
-#
 # addtoTable(spotifyList, conn, cur)
+
+avgDict = getTrackLengths(cur)
+drawBarChart(avgDict)
