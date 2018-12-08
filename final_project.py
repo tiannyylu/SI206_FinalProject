@@ -1,8 +1,8 @@
 import unittest
 import requests
+import csv
 import json
 import sqlite3
-from datetime import date
 import spotify_info
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -45,7 +45,32 @@ def addtoTable(spotifyList, conn, cur):
     conn.commit()
     pass
 
+def getTrackLengths(cur):
+    avgDict= {}
+    albumNames = [item['album_name'] for item in spotifyList]
+    for name in albumNames:
+        times = cur.execute('SELECT length_of_track FROM Albums where album = ?', (name,))
+        minLst = []
+        for t in times:
+            seconds = (t[0]/1000.0)
+            minutes = (seconds/60.0)
+            minLst.append(minutes)
+        avg = sum(minLst)/len(minLst)
+        avg = round(avg, 2)
+        avgDict[name] = avg
+    myFile = open('avgLengths.csv', 'w')
+    with myFile:
+        headers = ['album names', 'average track length']
+        writer = csv.DictWriter(myFile, fieldnames=headers)
+        writer.writeheader()
+        for item in avgDict.items():
+            writer.writerow({'album names': item[0], 'average track length': item[1]})
+    return myFile 
 
+
+
+conn = sqlite3.connect('/Users/tiannyylu/Desktop/206_programs/final-project-tiannyylu/albums.sqlite')
+cur = conn.cursor()
 
 albumIDLst = ['3CKVXhODttZebJAzjUs2un','6zk4RKl6JFlgLCV4Z7DQ7N','61ulfFSmmxMhc2wCdmdMkN','5M8U1qYKvRQHJJVHmPY7QD','0ny6mZMBrYSO0s8HAKbcVq','3cr4Xgz8nnfp7iYbVqwzzH','6uIB97CqMcssTss9WrtX8c','7DuJYWu66RPdcekF5TuZ7w']
 spotifyList = []
@@ -53,7 +78,7 @@ for id in albumIDLst:
     results = get_album(id)
     spotifyList.append(results)
 
-conn = sqlite3.connect('/Users/tiannyylu/Desktop/206_programs/final-project-tiannyylu/albums.sqlite')
-cur = conn.cursor()
+print(getTrackLengths(cur))
 
-addtoTable(spotifyList, conn, cur)
+#
+# addtoTable(spotifyList, conn, cur)
