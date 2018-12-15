@@ -100,7 +100,8 @@ def getTrackLengths(cur, spotifyList):
     return avgDict
 
 def drawBarChart(avgDict):
-    """ Uses the dictionary of average length of a track for each albums and plots those values in a bar chart
+    """ Uses the dictionary of average length of a track for each albums and plots
+    those values in a bar chart.
 
     avgDict - a dictionary of album names as the keys and the average track length as the values
     """
@@ -123,19 +124,19 @@ def drawBarChart(avgDict):
     ax.set(xlabel='Album Names', ylabel='Average Song Length', title='Average Song Length of Popular Christmas Albums')
     fig.savefig('SongLengths.png')
 
+""" Use block of code below to test without Unittests
 
-# conn = sqlite3.connect('/Users/tiannyylu/Desktop/206_programs/final-project-tiannyylu/albums.sqlite')
-# cur = conn.cursor()
-#
-# albumIDLst = ['3CKVXhODttZebJAzjUs2un','6zk4RKl6JFlgLCV4Z7DQ7N','61ulfFSmmxMhc2wCdmdMkN','5M8U1qYKvRQHJJVHmPY7QD','0ny6mZMBrYSO0s8HAKbcVq','3cr4Xgz8nnfp7iYbVqwzzH','6uIB97CqMcssTss9WrtX8c','7DuJYWu66RPdcekF5TuZ7w']
-# spotifyList = getSpotifyList(albumIDLst)
-#
-# addtoTable(spotifyList, conn, cur)
-#
-# avgDict = getTrackLengths(cur)
-# print(avgDict['Merry Christmas'])
-# drawBarChart(avgDict)
+conn = sqlite3.connect('/Users/tiannyylu/Desktop/206_programs/final-project-tiannyylu/albums.sqlite')
+cur = conn.cursor()
 
+albumIDLst = ['3CKVXhODttZebJAzjUs2un','6zk4RKl6JFlgLCV4Z7DQ7N','61ulfFSmmxMhc2wCdmdMkN','5M8U1qYKvRQHJJVHmPY7QD','0ny6mZMBrYSO0s8HAKbcVq','3cr4Xgz8nnfp7iYbVqwzzH','6uIB97CqMcssTss9WrtX8c','7DuJYWu66RPdcekF5TuZ7w']
+spotifyList = getSpotifyList(albumIDLst)
+
+addtoTable(spotifyList, conn, cur)
+
+avgDict = getTrackLengths(cur)
+drawBarChart(avgDict)
+"""
 class TestProject(unittest.TestCase):
     def setUp(self):
         clientID = spotify_info.SPOTIFY_CLIENT_ID
